@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#153e3b">
+  <title>MWT | Broadband Screening</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="config.js"></script>
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <header class="masthead">
+    <div class="identity"><span class="mark" aria-hidden="true">M</span><div><div class="eyebrow">MASHPEE WAMPANOAG TRIBE · THPO</div><h1 id="app-title">Broadband Cultural Resource Screening</h1></div></div>
+    <nav aria-label="Application"><span id="account" class="account">Not signed in</span><button id="sign-in" class="light">Sign in to ArcGIS</button><button id="sign-out" class="light" hidden>Sign out</button><button id="settings" class="icon-button" aria-label="Application settings">Settings</button></nav>
+  </header>
+  <main class="workspace">
+    <aside class="sidebar" aria-label="Screening controls">
+      <div class="intro"><span class="eyebrow">PROJECT REVIEW</span><h2>A clearer view of<br>your project area.</h2><p>Compare proposed work with cultural resource and protection layers.</p></div>
+      <section class="step"><h3><span>01</span> Define the project</h3><label for="project-name">Project name</label><input id="project-name" placeholder="e.g. Main Street fiber segment" maxlength="120"><div class="draw-tools"><button id="draw-polygon" disabled>Draw area</button><button id="draw-line" disabled>Draw route</button><button id="select-feature" disabled>Select on map</button><button id="clear" disabled>Clear</button></div><p id="project-status" class="hint">Connect your map to begin.</p><label for="half-width">Route work-area offset, each side (ft)</label><input id="half-width" type="number" min="0.1" max="10000" step="0.1" value="4"><p class="hint">Used for routes. Draw an area for an exact footprint.</p></section>
+      <section class="step"><h3><span>02</span> Choose layers to check</h3><div id="layer-list"><p class="hint">Your map’s feature layers will appear here. Select cultural resources or existing protection buffers.</p></div><label for="distance">Additional screening distance (ft)</label><input id="distance" type="number" min="0" max="10000" step="1" value="0"><p class="hint">Keep 0 for existing 50-ft protection buffers. Use 50 when checking unbuffered sites.</p></section>
+      <div class="run-panel"><button id="run" class="primary" disabled>Run screening <span aria-hidden="true">→</span></button><p class="hint">Results reflect the selected layers and their current data.</p></div>
+    </aside>
+    <div class="main-panel">
+      <section class="map-section" aria-label="Project map">
+        <div id="map"></div>
+        <div id="map-placeholder" class="map-placeholder"><svg viewBox="0 0 800 500" aria-hidden="true"><path fill="#c3d8d1" d="M0 0h800v500H0z"/><path fill="#e3e8d9" d="M0 0h520l-30 75 60 45-70 45 20 90-110 25-40 80-100-20-45 100-110 60H0z"/><g fill="none" stroke="#f7f8ed" stroke-width="9"><path d="M-50 150L200 180 300 110 510 140"/><path d="M100-50L150 200 260 400 300 550"/><path d="M-40 330L180 270 440 310"/></g><g fill="none" stroke="#a3baaa" stroke-width="1"><path d="M0 80l220 20 60-100M0 410l200-40 80 130M350 0l20 200 90 60"/></g></svg><div class="map-welcome"><span class="eyebrow">YOUR MAP. YOUR WORKFLOW.</span><h2>Ready for your<br>ArcGIS Online layers.</h2><p>Connect your existing web map to start screening.</p><button id="connect" class="primary">Connect web map →</button><small>Background illustration · no project data displayed</small></div></div>
+        <div class="map-chip" id="map-chip" hidden><span class="dot"></span><span id="map-title">Web map</span></div>
+      </section>
+      <section class="results" aria-labelledby="results-heading"><div class="results-top"><div><span class="eyebrow">SCREENING RESULTS</span><h2 id="results-heading">Start with a project area</h2></div><div class="export-tools"><button id="export" disabled>Download CSV</button><button id="print" disabled>Print report</button></div></div><p id="status" role="status" aria-live="polite">Draw or select a project, choose your layers, then run screening.</p><div id="results-body" class="results-body"><div class="empty-state"><span aria-hidden="true">◎</span><p>Layer checks and intersecting features will appear here.</p></div></div></section>
+      <footer>THPO screening support · Layer checks do not replace THPO review or field verification.</footer>
+    </div>
+  </main>
+  <dialog id="setup"><form id="setup-form"><div class="dialog-heading"><div><span class="eyebrow">APPLICATION SETTINGS</span><h2>Connect your web map</h2></div><button type="button" id="close-setup" aria-label="Close settings">×</button></div><p>Use your Tribe’s existing ArcGIS Online map and registered application.</p><label for="portal-input">ArcGIS organization URL</label><input id="portal-input" type="url" required><label for="webmap-input">Web map URL or item ID</label><input id="webmap-input" required placeholder="Paste the web map URL or its 32-character ID"><label for="client-input">OAuth App ID / Client ID</label><input id="client-input" required placeholder="App ID from ArcGIS application settings"><p class="hint">Use the App ID, never the App Secret. Add this app’s address to the registered Redirect URLs:</p><code id="redirect-url"></code><label class="import-label" for="import-config">Or import your Experience Builder config.json</label><input id="import-config" type="file" accept=".json,application/json"><p id="setup-status" role="status" class="hint"></p><div class="dialog-actions"><button type="button" id="download-config">Download config.js</button><button type="submit" class="primary">Save & connect</button></div><p class="hint">Saved settings apply in this browser. Upload the downloaded config.js to set defaults for everyone.</p></form></dialog>
+</body>
+</html>
