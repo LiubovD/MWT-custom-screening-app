@@ -1,2 +1,38 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&display=swap');
-:root{--ink:#173c39;--muted:#657773;--paper:#f8f8f1;--line:#dbe2d9;--accent:#c9dc98;--white:#fff;--red:#a53e33}*{box-sizing:border-box}body{margin:0;font:14px 'DM Sans',system-ui,sans-serif;color:var(--ink);background:var(--paper)}button,input{font:inherit}button{cursor:pointer;border:1px solid var(--line);border-radius:6px;padding:10px 13px;background:#fff;color:var(--ink);font-weight:600}button:hover:not(:disabled){background:#edf2e8;border-color:#739489}button:focus-visible,input:focus-visible{outline:3px solid #568eaa;outline-offset:3px}button:disabled{opacity:.42;cursor:not-allowed}input{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:5px;background:#fff;color:var(--ink)}label{display:block;font-size:12px;font-weight:600;margin:13px 0 7px}h1,h2,h3,p{margin:0}h1{font-size:18px;font-weight:500;line-height:1.35}h2{font-size:24px;font-weight:500}h3{font-size:15px;margin-bottom:18px}.eyebrow{font-size:10px;font-weight:700;letter-spacing:1.8px;line-height:1.8}.masthead{min-height:88px;padding:18px 28px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:20px}.identity{display:flex;gap:16px;align-items:center}.mark{width:45px;height:45px;border:1px solid #9ab5a5;border-radius:50%;display:grid;place-items:center;font:24px 'Libre Baskerville',Georgia,serif;color:var(--accent)}.identity .eyebrow{color:#c2d3c9}.masthead nav{display:flex;align-items:center;gap:10px}.account{font-size:12px;color:#c5d7ce}.light,.icon-button{background:transparent;color:#fff;border-color:#53716a}.light:hover:not(:disabled),.icon-button:hover:not(:disabled){color:var(--ink)}.workspace{display:grid;grid-template-columns:350px minmax(0,1fr);min-height:calc(100vh - 88px)}.sidebar{border-right:1px solid var(--line);background:var(--paper)}.intro{padding:30px 27px 25px;border-bottom:1px solid var(--line)}.intro h2{font:26px/1.35 'Libre Baskerville',Georgia,serif;margin:13px 0}.intro p{line-height:1.65;color:var(--muted)}.step{padding:23px 27px;border-bottom:1px solid var(--line)}h3 span{font-size:11px;color:#627f6b;border:1px solid #bacabd;border-radius:50%;width:26px;height:26px;display:inline-grid;place-items:center;margin-right:8px}.draw-tools{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}.draw-tools button{padding:10px 5px;font-size:12px}.draw-tools button.active{background:var(--ink);color:#fff}.hint{font-size:12px;line-height:1.55;color:var(--muted);margin-top:9px}.run-panel{padding:24px 27px}.primary{background:var(--ink);color:#fff;border-color:var(--ink)}.primary:hover:not(:disabled){background:#285954;color:white}.run-panel .primary{width:100%;display:flex;justify-content:space-between;padding:14px 17px}.main-panel{display:flex;flex-direction:column;min-width:0}.map-section{height:clamp(350px,54vh,630px);position:relative;background:#d7e2dc;overflow:hidden}#map{height:100%;width:100%}.map-placeholder{position:absolute;inset:0}.map-placeholder>svg{width:100%;height:100%;object-fit:cover;opacity:.68}.map-welcome{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:#eef1e787;padding:25px}.map-welcome h2{font:36px/1.35 'Libre Baskerville',Georgia,serif;margin:15px 0}.map-welcome p{margin:0 0 22px}.map-welcome small{font-size:10px;color:var(--muted);margin-top:25px}.map-chip{position:absolute;top:18px;left:70px;background:var(--paper);padding:9px 13px;border-radius:30px;box-shadow:0 2px 10px #193f3920;max-width:70%;font-size:12px}.dot{display:inline-block;background:#4d7865;width:7px;height:7px;border-radius:100%;margin-right:7px}.results{padding:27px 30px;background:#fff;flex:1}.results-top{display:flex;align-items:center;justify-content:space-between;gap:15px}.results-top h2{font-size:22px;margin-top:5px}.export-tools{display:flex;gap:8px}.export-tools button{font-size:12px}#status{color:var(--muted);line-height:1.6;margin:14px 0 20px}.results-body{max-height:410px;overflow:auto}.empty-state{border:1px dashed #c7d3c8;border-radius:6px;padding:28px;text-align:center;color:var(--muted)}.empty-state span{font-size:29px;display:block;margin-bottom:10px}footer{font-size:11px;padding:16px 30px;color:var(--muted);border-top:1px solid var(--line)}.layer-row{display:flex;align-items:flex-start;gap:9px;padding:9px 0;margin:0;font-weight:400;line-height:1.4}.layer-row input{width:16px;height:16px;margin:1px 0;accent-color:var(--ink)}.layer-name{flex:1}.visibility{font-size:10px;color:var(--muted);margin-top:4px;display:block}.result-layer{border:1px solid var(--line);border-radius:6px;margin:10px 0;overflow:hidden}.result-heading{padding:13px 15px;display:flex;justify-content:space-between;gap:15px;background:#f3f6ef;font-weight:600}.badge{font-size:11px;white-space:nowrap;background:#e1ebd5;padding:3px 8px;border-radius:20px}.badge.error{background:#f8e3df;color:var(--red)}.result-feature{display:block;width:100%;border:0;border-top:1px solid var(--line);text-align:left;border-radius:0;font-weight:400;padding:12px 15px}.result-feature small{color:var(--muted);display:block;margin-top:4px}.result-note{padding:12px 15px;font-size:12px;color:var(--muted);line-height:1.55}.error-text{color:var(--red)!important}dialog{border:1px solid var(--line);border-radius:12px;width:540px;max-width:calc(100% - 28px);padding:28px;box-shadow:0 20px 70px #102e3550;color:var(--ink)}dialog::backdrop{background:#0b302a82;backdrop-filter:blur(3px)}.dialog-heading{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}.dialog-heading button{font-size:20px;padding:2px 10px}.dialog-heading h2{margin-top:6px}dialog p{color:var(--muted);line-height:1.5}dialog code{display:block;overflow-wrap:anywhere;background:#f0f3eb;padding:10px;font-size:12px;margin-top:10px}.dialog-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:23px}.import-label{border-top:1px solid var(--line);padding-top:17px}#layer-list{max-height:260px;overflow:auto}body.busy .step input,body.busy .step button{pointer-events:none}body.busy .step{opacity:.65}[hidden]{display:none!important}@media(max-width:1000px){.masthead{padding:15px 18px}.account{display:none}.workspace{grid-template-columns:300px minmax(0,1fr)}.intro,.step,.run-panel{padding:22px}.results-top{align-items:flex-start;flex-direction:column}}@media(max-width:720px){.masthead{flex-wrap:wrap}h1{font-size:16px}.masthead nav{width:100%;justify-content:flex-end}.workspace{display:flex;flex-direction:column}.main-panel{order:-1}.map-section{height:380px}.results{padding:22px}.sidebar{border-right:0}.intro h2 br{display:none}.map-welcome h2{font-size:29px}.results-body{max-height:300px}}@media print{.masthead{background:white;color:#173c39}.masthead nav,.sidebar,.map-section,.export-tools,footer{display:none}.workspace{display:block}.results-body{max-height:none;overflow:visible}.result-layer{break-inside:avoid}.results{padding:10px}.mark{color:#173c39}.identity .eyebrow{color:#173c39}.result-feature{color:#173c39}body{background:white}}
+
+/* =========================================
+   MASHPEE WAMPANOAG TRIBE HEADER LOGO
+   ========================================= */
+
+.identity {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.identity .tribal-logo {
+  display: block;
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
+  min-height: 56px;
+  max-width: 56px;
+  max-height: 56px;
+  object-fit: contain;
+  border-radius: 50%;
+  background: white;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+  flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+  .identity .tribal-logo {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    min-height: 42px;
+    max-width: 42px;
+    max-height: 42px;
+  }
+}
