@@ -20,19 +20,43 @@ try {
   };
 } catch {}
 
-// Only these three layers appear in screening controls.
-// Layer titles must match the titles in the ArcGIS web map.
-const SCREENING_LAYER_TITLES = [
-  'Burial sites digitized',
-  'Burial Protection Buffer 50ft',
-  'Forest No Disturb Area'
-];
+/* =========================================
+   SCREENING LAYER SETTINGS
+   ========================================= */
 
-const allowedScreeningLayers = new Set(
-  SCREENING_LAYER_TITLES.map(title =>
-    title.trim().toLowerCase()
-  )
-);
+// Normalize names to match consistently.
+function normalizeLayerName(name) {
+  return String(name || '')
+    .toLowerCase()
+    .replace(/[\s_-]+/g, ' ')
+    .trim();
+}
+
+// Broadband layers are NOT screening targets.
+// They remain available on the map for selecting
+// project routes and areas.
+function isExcludedScreeningLayer(layer) {
+  const name = normalizeLayerName(layer.title || layer.id);
+
+  return (
+    name === 'mwt broadband lines' ||
+    name === 'broadbandlines' ||
+    name === 'broadband lines' ||
+    name.startsWith('broadbandlines ') ||
+    name.startsWith('broadband lines ')
+  );
+}
+
+// These five layers will be checked by default.
+// All other non-excluded feature layers remain selectable.
+const defaultScreeningLayerNames = new Set([
+  '50 ft buffer native burial grounds',
+  'mhc inventory points',
+  'forest no disturb area',
+  'burial protection buffer 50ft',
+  'burial protection buffer 50 ft',
+  'burial sites digitized'
+]);
 
 let sdkPromise;
 let sdk;
@@ -48,6 +72,10 @@ let layers = [];
 let report = null;
 let selectMode = false;
 let busy = false;
+
+/* =========================================
+   UTILITIES
+   ========================================= */
 
 function status(message, error = false) {
   $('status').textContent = message;
@@ -72,8 +100,13 @@ function download(name, content, type) {
   setTimeout(() => URL.revokeObjectURL(url), 3000);
 }
 
+/* =========================================
+   APPLICATION CONTROLS
+   ========================================= */
+
 function updateControls() {
-  const available = Boolean(view && layers.length) && !busy;
+  const available =
+    Boolean(view && layers.length) && !busy;
 
   for (const id of [
     'draw-polygon',
@@ -87,7 +120,9 @@ function updateControls() {
   $('run').disabled =
     !available ||
     !projectGeometry ||
-    !document.querySelector('#layer-list input:checked');
+    !document.querySelector(
+      '#layer-list input:checked'
+    );
 
   $('export').disabled = busy || !report;
   $('print').disabled = busy || !report;
@@ -106,8 +141,7 @@ function updateControls() {
   document.querySelectorAll('#layer-list input')
     .forEach(el => {
       el.disabled =
-        busy ||
-        layers[Number(el.value)]?.isTable;
+        busy || layers[Number(el.value)]?.isTable;
     });
 
   document.body.classList.toggle('busy', busy);
@@ -130,6 +164,10 @@ function invalidate() {
 
   updateControls();
 }
+
+/* =========================================
+   APPLICATION SETTINGS
+   ========================================= */
 
 function showSetup() {
   $('portal-input').value = config.portalUrl || '';
@@ -229,7 +267,7 @@ $('import-config').onchange = async event => {
 };
 
 /* =========================================
-   ARCGIS SDK AND AUTHENTICATION
+   ARCGIS SDK
    ========================================= */
 
 function loadSdk() {
@@ -237,6 +275,7 @@ function loadSdk() {
 
   sdkPromise = new Promise((resolve, reject) => {
     const css = document.createElement('link');
+
     css.rel = 'stylesheet';
     css.href =
       'https://js.arcgis.com/4.34/esri/themes/light/main.css';
@@ -247,16 +286,21 @@ function loadSdk() {
     script.src = 'https://js.arcgis.com/4.34/';
 
     const timer = setTimeout(() => {
-      reject(new Error(
-        'ArcGIS did not load. Check your connection and reload the page.'
-      ));
+      reject(
+        new Error(
+          'ArcGIS did not load. Check your connection and reload the page.'
+        )
+      );
     }, 30000);
 
     script.onerror = () => {
       clearTimeout(timer);
-      reject(new Error(
-        'Could not load ArcGIS. Check your connection and reload the page.'
-      ));
+
+      reject(
+        new Error(
+          'Could not load ArcGIS. Check your connection and reload the page.'
+        )
+      );
     };
 
     script.onload = () => window.require([
@@ -306,6 +350,7 @@ function loadSdk() {
       ]);
 
       resolve(sdk);
+
     }, error => {
       clearTimeout(timer);
       reject(error);
@@ -316,6 +361,10 @@ function loadSdk() {
 
   return sdkPromise;
 }
+
+/* =========================================
+   ARCGIS AUTHENTICATION
+   ========================================= */
 
 async function showAccount() {
   try {
@@ -348,7 +397,6 @@ async function showAccount() {
 $('sign-in').onclick = async () => {
   try {
     config = validateSettings(config);
-
     await loadSdk();
 
     await sdk.identity.getCredential(
@@ -364,10 +412,7 @@ $('sign-in').onclick = async () => {
     if (!config.clientId || !config.webmapId) {
       showSetup();
     } else {
-      status(
-        'Sign-in failed: ' + error.message,
-        true
-      );
+      status('Sign-in failed: ' + error.message, true);
     }
   }
 };
@@ -385,7 +430,7 @@ $('sign-out').onclick = () => {
 };
 
 /* =========================================
-   MAP SYMBOLS AND PROJECT GEOMETRY
+   GRAPHIC SYMBOLS
    ========================================= */
 
 function symbol(geometry, hit = false) {
@@ -425,6 +470,10 @@ function symbol(geometry, hit = false) {
     }
   };
 }
+
+/* =========================================
+   PROJECT GEOMETRY
+   ========================================= */
 
 function setProject(geometry) {
   projectGeometry = geometry.clone();
@@ -488,9 +537,7 @@ async function connectMap() {
 
   $('map-placeholder').hidden = true;
   $('map-chip').hidden = false;
-
-  $('map-title').textContent =
-    webmap.portalItem.title;
+  $('map-title').textContent = webmap.portalItem.title;
 
   projectLayer = new sdk.GraphicsLayer({
     title: 'Project footprint',
@@ -528,13 +575,10 @@ async function connectMap() {
   });
 
   /* =========================================
-     SCREENING LAYER SELECTION
-
-     Only the three approved layers are
-     displayed and checked by default.
-     All other layers remain on the web map.
+     SCREENING LAYER CHECKLIST
      ========================================= */
 
+  // Include all feature layers for map interaction.
   const candidates = webmap.allLayers
     .toArray()
     .filter(layer => layer.type === 'feature');
@@ -543,21 +587,18 @@ async function connectMap() {
     candidates.map(layer => layer.load())
   );
 
-  // Keep all feature layers for map selection.
   layers = candidates;
-
   $('layer-list').replaceChildren();
 
   let displayedCount = 0;
 
   layers.forEach((layer, index) => {
-    const layerTitle = (layer.title || '').trim();
+    const title = layer.title || layer.id;
+    const normalizedTitle = normalizeLayerName(title);
 
-    const normalizedTitle =
-      layerTitle.toLowerCase();
-
-    // Exclude other layers from the checklist.
-    if (!allowedScreeningLayers.has(normalizedTitle)) {
+    // Broadband line layers cannot be checked
+    // for screening, but remain on the map.
+    if (isExcludedScreeningLayer(layer)) {
       return;
     }
 
@@ -567,23 +608,25 @@ async function connectMap() {
     row.className = 'layer-row';
 
     const input = document.createElement('input');
-
     input.type = 'checkbox';
     input.value = String(index);
 
-    // Checked by default.
-    input.checked = true;
+    // Five preferred layers checked by default.
+    // Other eligible layers remain selectable.
+    input.checked =
+      defaultScreeningLayerNames.has(normalizedTitle) ||
+      (config.screeningLayerIds || []).includes(layer.id);
 
     const text = document.createElement('span');
     text.className = 'layer-name';
-    text.textContent = layerTitle;
+    text.textContent = title;
 
     const note = document.createElement('small');
     note.className = 'visibility';
 
     note.textContent =
       outcomes[index].status === 'rejected'
-        ? 'Load failed; a selected layer will be reported as failed.'
+        ? 'Load failed; screening may be incomplete.'
         : layer.isTable
           ? 'Nonspatial table; cannot screen.'
           : layer.visible
@@ -605,11 +648,11 @@ async function connectMap() {
 
   if (!displayedCount) {
     $('layer-list').textContent =
-      'None of the three designated screening layers were found. Check the web map layer titles.';
+      'No eligible feature layers were found. Check the web map layers.';
   }
 
   /* =========================================
-     SELECT EXISTING MAP FEATURES
+     SELECT PROJECT FEATURE ON MAP
      ========================================= */
 
   view.on('click', async event => {
@@ -647,7 +690,7 @@ async function connectMap() {
     'Draw an area or route, or select a feature on the map.';
 
   status(
-    'Map connected. The three designated screening layers are selected.'
+    'Map connected. Choose the layers you want to check.'
   );
 
   updateControls();
@@ -655,7 +698,7 @@ async function connectMap() {
 }
 
 /* =========================================
-   DRAWING CONTROLS
+   DRAW AND SELECT TOOLS
    ========================================= */
 
 for (const [id, tool] of [
@@ -727,15 +770,14 @@ $('run').onclick = async () => {
     ...document.querySelectorAll(
       '#layer-list input:checked'
     )
-  ].map(input => layers[Number(input.value)]);
+  ].map(input => layers[Number(input.value)])
+   .filter(layer => layer && !isExcludedScreeningLayer(layer));
 
   if (!selected.length) return;
 
   busy = true;
-
   stopSelection();
   sketch.cancel();
-
   updateControls();
 
   report = null;
@@ -852,7 +894,8 @@ $('run').onclick = async () => {
           layerId: layer.id,
           count: null,
           features: [],
-          error: error.message || 'Layer query failed.'
+          error:
+            error.message || 'Layer query failed.'
         });
       }
     }
@@ -880,7 +923,7 @@ $('run').onclick = async () => {
 };
 
 /* =========================================
-   REPORT RESULTS
+   SCREENING REPORT
    ========================================= */
 
 function renderReport() {
@@ -1029,7 +1072,7 @@ $('print').onclick = () => {
 };
 
 /* =========================================
-   APPLICATION INITIALIZATION
+   INITIALIZE APPLICATION
    ========================================= */
 
 $('app-title').textContent =
